@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+		<!-- 将action配置到spring当中统一管理 -->
+	<constant value="spring" name="struts.objectFactory" />
+	<!-- 配置为开发模式 -->
+	<package name="root" extends="struts-default">
+		<action name="login" class="login">
+			<result name="succeed">/Welcome_Administrator.jsp</result>
+			<result name="failed">/login.jsp</result>
+		</action>
+		<action name="add" class="add">
+			<result type="redirectAction">login</result>
+		</action>
+		<action name="delete" class="delete">
+			<result type="redirectAction">login</result>
+		</action>
+		<action name="goUpdate" class="goUpdate">
+			<result>/Update.jsp</result>
+		</action>
+		<action name="update" class="update">
+			<result type="redirectAction">login</result>
+		</action>
+		<action name="location" class="location">
+			<result type="redirectAction">login</result>
+		</action>
+	</package>
+</struts>    
