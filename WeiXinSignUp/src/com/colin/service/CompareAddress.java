@@ -30,7 +30,6 @@ public class CompareAddress {
 		ResultSet rs2 = null;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt1 = null;
-		String resp = "wrong";
 		String sql = "select * from staff where weixinID='"+weixinID+"' limit 1";
 		try {
 			conn = ConnManager.getConnection();
@@ -48,7 +47,7 @@ public class CompareAddress {
 				String addr = rs1.getString("workPlace");//员工工作地点
 				String x = rs1.getString("lat");//经纬度
 				String y = rs1.getString("lng");
-				int t = compareLocation(location_x,location_y,address,x,y,addr);
+				int t = compareLocation(location_x,location_y,x,y);
 				if(1 != t) return distanceResp;
 				String sql2 = "select * from record where weixinID='"+weixinID+"' and effectiveness=1 order by record_time desc limit 1";
 				pstmt = conn.prepareStatement(sql2);
@@ -111,39 +110,33 @@ public class CompareAddress {
 		else return -1;
 	}
 	
-	public static int compareLocation(String location_x,String location_y,String address,String x,String y,String addr)
+	public static int compareLocation(String location_x,String location_y,String x,String y)
 	{
-		if(addr.equals(address))
-		{
-			//计算两个经纬度之间的距离
-			double x1 = Double.parseDouble(location_x);
-			double y1 = Double.parseDouble(location_y);
-			double x2 = Double.parseDouble(x);
-			double y2 = Double.parseDouble(y);
-			
-			double a = rad(x1) - rad(x2);
-			double b = rad(y1) - rad(y2);
-			
-			double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2), 2) + Math.cos(rad(x1)) * Math.cos(rad(x2)) * Math.pow(Math.sin(b/2), 2)));
-			s = s * EARTH_RADIUS;
-			s = Math.round(s * 10000) / 10;
-			//签到地附近300米都可以完成签到功能
-			if(s <= 800) 
-				{	
-				distanceResp = "距离签到地"+s+"米(<800)"+",合格!";
-				System.out.println("距离签到地"+s+"米(<800)"+",合格!");
-					return 1;
-				}
-			
-			else 
-				{
-					distanceResp = "距离签到地"+s+"米(>800)"+",不予通过!";
-					System.out.println("距离签到地"+s+"米(>800)"+",不予通过!");
-					return 2;
-				}
-		}	
-		distanceResp = "不在工作地签到，请移至工作地后在签到!";
-		System.out.println("不在工作地签到，请移至工作地后在签到!");
-		return 3;
+		//计算两个经纬度之间的距离
+		double x1 = Double.parseDouble(location_x);
+		double y1 = Double.parseDouble(location_y);
+		double x2 = Double.parseDouble(x);
+		double y2 = Double.parseDouble(y);
+		
+		double a = rad(x1) - rad(x2);
+		double b = rad(y1) - rad(y2);
+		
+		double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2), 2) + Math.cos(rad(x1)) * Math.cos(rad(x2)) * Math.pow(Math.sin(b/2), 2)));
+		s = s * EARTH_RADIUS;
+		s = Math.round(s * 10000) / 10;
+		//签到地附近300米都可以完成签到功能
+		if(s <= 800) 
+			{	
+			distanceResp = "距离签到地"+s+"米(<800)"+",合格!";
+			System.out.println("距离签到地"+s+"米(<800)"+",合格!");
+				return 1;
+			}
+		
+		else 
+			{
+				distanceResp = "距离签到地"+s+"米(>800)"+",不予通过!";
+				System.out.println("距离签到地"+s+"米(>800)"+",不予通过!");
+				return 2;
+			}
 	}
 }

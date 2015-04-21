@@ -19,7 +19,7 @@ public class HttpRequest
     BufferedReader in = null;
     try
     {
-      String urlNameString = "http://apis.map.qq.com/ws/geocoder/v1/?location=" + Latitude + "," + Longitude + "&" + "key=" + "7PNBZ-AFP3U-FC2V2-2LAVK-FMWC3-7SBNK";
+      String urlNameString = "http://apis.map.qq.com/ws/geocoder/v1/?location=" + Latitude + "," + Longitude + "&key="+key;
       
       URL realUrl = new URL(urlNameString);
       URLConnection connection = realUrl.openConnection();
